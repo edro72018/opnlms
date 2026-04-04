@@ -9,3 +9,5 @@ echo "*.pyo" >> .gitignore
 echo "*.log" >> .gitignore
 echo "coverage/" >> .gitignore
 echo "token.txt" >> .gitignore
+git add .gitignore
+git commit -m "Ignorar token.txt"
