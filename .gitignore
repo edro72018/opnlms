@@ -1,13 +1,25 @@
-echo ".env" >> .gitignore
-echo "venv/" >> .gitignore
-echo "__pycache__/" >> .gitignore
-echo "db.sqlite3" >> .gitignore
-echo "staticfiles/" >> .gitignore
-echo "media/" >> .gitignore
-echo "*.pyc" >> .gitignore
-echo "*.pyo" >> .gitignore
-echo "*.log" >> .gitignore
-echo "coverage/" >> .gitignore
-echo "token.txt" >> .gitignore
-git add .gitignore
-git commit -m "Ignorar token.txt"
+# Variables de entorno
+.env
+token.txt
+
+# Entorno virtual
+venv/
+
+# Cachés de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs y reportes
+*.log
+coverage/
+
+# Base de datos local
+db.sqlite3
+
+# Migraciones de Alembic
+alembic/versions/
+
+# Archivos estáticos y media (si los generas)
+staticfiles/
+media/
