@@ -1,0 +1,38 @@
+# 1. Login y guarda el token en una variable
+TOKEN=$(curl -s -X POST "http://localhost:8000/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"edwin1@opnlms.com","password":"mipass123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['access_token'])")
+
+# 2. Verifica que el token se guardó
+echo $TOKEN
+
+# 3. Úsalo en cualquier endpoint protegido
+curl -s -X GET "http://localhost:8000/api/v1/auth/me" \
+  -H "authorization: Bearer $TOKEN" | python3 -m json.tool
+
+  # Login y guarda token
+TOKEN=$(curl -s -X POST "http://localhost:8000/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"edwin1@opnlms.com","password":"P@55w0rd"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['access_token'])")
+
+# Crear curso
+curl -s -X POST "http://localhost:8000/api/v1/courses" \
+  -H "authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Python desde cero",
+    "description": "Aprende Python para desarrollo backend",
+    "status": "published"
+  }' | python3 -m json.tool
+
+# Listar cursos
+curl -s -X GET "http://localhost:8000/api/v1/courses" \
+  -H "authorization: Bearer $TOKEN" | python3 -m json.tool
+
+
+
+
+/api/v1/auth/me
+
