@@ -23,7 +23,10 @@ class AuthService:
         # Crea el usuario — nunca guardamos el password en texto plano
         user = await self.repo.create(
             email=data.email,
-            full_name=data.full_name,
+            first_name=data.first_name,
+            middle_name=data.middle_name,
+            last_name=data.last_name,
+            second_last_name=data.second_last_name,
             hashed_password=hash_password(data.password),
             role=data.role,
         )
