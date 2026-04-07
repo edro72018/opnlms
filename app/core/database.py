@@ -13,8 +13,8 @@ from fastapi import Depends
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,  # muestra las queries en consola si DEBUG=true
-    pool_size=10,
-    max_overflow=20,
+    # pool_size=10,
+    # max_overflow=20,
 )
 
 # Fábrica de sesiones — cada request obtiene la suya
