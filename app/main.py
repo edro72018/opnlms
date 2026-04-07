@@ -29,36 +29,6 @@ app.add_middleware(
 )
 
 
-"""
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    schema = get_openapi(
-        title=settings.APP_NAME,
-        version=settings.APP_VERSION,
-        routes=app.routes,
-    )
-    schema["components"]["securitySchemes"] = {
-        "BearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT",
-        }
-    }
-    for path in schema["paths"].values():
-        for method in path.values():
-            method["security"] = [{"BearerAuth": []}]
-    app.openapi_schema = schema
-    return schema
-
-
-app.openapi = custom_openapi
-
-security = HTTPBearer()
-
-"""
-
-
 @app.exception_handler(LMSException)
 async def lms_exception_handler(request: Request, exc: LMSException):
     return JSONResponse(
