@@ -52,6 +52,19 @@ async def lms_exception_handler(request: Request, exc: LMSException):
     )
 
 
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    detail = str(exc) if settings.DEBUG else "Error interno del servidor"
+    return JSONResponse(
+        status_code=500,
+        content=APIResponse(
+            success=False,
+            message=detail,
+            errors=[type(exc).__name__],
+        ).model_dump(),
+    )
+
+
 @app.get("/health", tags=["sistema"])
 async def health_check():
     return APIResponse(
