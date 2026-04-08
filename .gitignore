@@ -16,6 +16,7 @@ coverage/
 
 # Base de datos local
 db.sqlite3
+*.db
 
 # Migraciones de Alembic
 alembic/versions/

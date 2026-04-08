@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Float, Boolean, ForeignKey, UniqueConstraint
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, Float, Boolean, ForeignKey, UniqueConstraint, Uuid
 from sqlalchemy.orm import relationship
 from app.models.base import Base, TimestampMixin
 import uuid
@@ -8,15 +7,15 @@ import uuid
 class Enrollment(Base, TimestampMixin):
     __tablename__ = "enrollments"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     student_id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
     )
     course_id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("courses.id", ondelete="CASCADE"),
         nullable=False,
     )

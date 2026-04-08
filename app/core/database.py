@@ -4,17 +4,15 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from fastapi import Depends
 
-# from app.core.exceptions import AuthError
-# from fastapi import Depends, HTTPException
-# from app.core.exceptions import AuthError
-
+# SQLite necesita check_same_thread=False; PostgreSQL no requiere connect_args extra
+_is_sqlite = settings.DATABASE_URL.startswith("sqlite")
+_engine_kwargs = {"connect_args": {"check_same_thread": False}} if _is_sqlite else {}
 
 # El motor async — una sola instancia para toda la app
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,  # muestra las queries en consola si DEBUG=true
-    # pool_size=10,
-    # max_overflow=20,
+    **_engine_kwargs,
 )
 
 # Fábrica de sesiones — cada request obtiene la suya

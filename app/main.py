@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import JSONResponse
 from app.core.config import settings
@@ -5,11 +6,20 @@ from app.core.exceptions import LMSException
 from app.schemas.base import APIResponse
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.database import get_db
+from app.core.database import get_db, engine
+from app.models import Base
 from app.api.auth import router as auth_router
 from app.api.course import router as courses_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.enrollments import router as enrollments_router
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: crea las tablas si no existen (compatible con SQLite y PostgreSQL)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
 
 
 app = FastAPI(
@@ -17,6 +27,7 @@ app = FastAPI(
     version=settings.APP_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 
@@ -51,12 +62,12 @@ async def health_check():
 
 @app.get("/health/db", tags=["sistema"])
 async def health_db(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(text("SELECT version()"))
-    version = result.scalar()
+    result = await db.execute(text("SELECT 1"))
+    result.scalar()
     return APIResponse(
         success=True,
-        message="OK",
-        data={"postgres_version": version},
+        message="Conexión a la base de datos OK",
+        data={"db": settings.DATABASE_URL.split("://")[0]},
     )
 
 

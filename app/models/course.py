@@ -6,8 +6,8 @@ from sqlalchemy import (
     Integer,
     ForeignKey,
     Enum as SAEnum,
+    Uuid,
 )
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.models.base import Base, TimestampMixin
 import uuid
@@ -23,11 +23,11 @@ class CourseStatus(str, enum.Enum):
 class Course(Base, TimestampMixin):
     __tablename__ = "courses"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     status = Column(
-        SAEnum(CourseStatus, name="coursestatus"),
+        SAEnum(CourseStatus, name="coursestatus", native_enum=False),
         nullable=False,
         default=CourseStatus.draft,
     )
@@ -35,7 +35,7 @@ class Course(Base, TimestampMixin):
 
     # Quién creó el curso
     created_by = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
     )
@@ -55,14 +55,14 @@ class Course(Base, TimestampMixin):
 class Module(Base, TimestampMixin):
     __tablename__ = "modules"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     order = Column(Integer, nullable=False, default=0)  # orden dentro del curso
     is_visible = Column(Boolean, default=True, nullable=False)
 
     course_id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("courses.id", ondelete="CASCADE"),
         nullable=False,
     )
