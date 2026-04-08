@@ -1,3 +1,4 @@
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user import UserRepository
 from app.schemas.user import RegisterRequest, LoginRequest, TokenResponse, UserResponse
@@ -51,7 +52,7 @@ class AuthService:
         if not payload or payload.get("type") != "access":
             raise AuthError("Token inválido o expirado")
 
-        user = await self.repo.get_by_id(payload["sub"])
+        user = await self.repo.get_by_id(UUID(payload["sub"]))
         if not user or not user.is_active:
             raise AuthError("Usuario no encontrado")
 
