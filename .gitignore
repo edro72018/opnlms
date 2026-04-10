@@ -24,4 +24,5 @@ alembic/versions/
 # Archivos estáticos y media (si los generas)
 staticfiles/
 media/
-docker-compose.yml
+docker-compose.
+request.http
