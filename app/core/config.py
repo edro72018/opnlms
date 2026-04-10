@@ -6,7 +6,8 @@ class Settings(BaseSettings):
     APP_VERSION: str = "0.1.0"
     DEBUG: bool = False
 
-    DATABASE_URL: str = "sqlite+aiosqlite:///./opnlms.db"
+    DATABASE_URL: str
+    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30

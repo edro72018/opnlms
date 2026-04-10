@@ -23,5 +23,16 @@ class UserRepository:
         await self.db.refresh(user)
         return user
 
+    async def get_all(self) -> list[User]:
+        result = await self.db.execute(select(User).order_by(User.created_at))
+        return list(result.scalars().all())
+
+    async def update(self, user: User, **kwargs) -> User:
+        for campo, valor in kwargs.items():
+            setattr(user, campo, valor)
+        await self.db.flush()
+        await self.db.refresh(user)
+        return user
+
     async def email_exists(self, email: str) -> bool:
         return await self.get_by_email(email) is not None

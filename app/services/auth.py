@@ -1,6 +1,7 @@
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user import UserRepository
+from app.models.user import UserRole
 from app.schemas.user import RegisterRequest, LoginRequest, TokenResponse, UserResponse
 from app.core.security import (
     hash_password,
@@ -29,7 +30,8 @@ class AuthService:
             last_name=data.last_name,
             second_last_name=data.second_last_name,
             hashed_password=hash_password(data.password),
-            role=data.role,
+            role=UserRole.student,
+            sex=data.sex,
         )
 
         return self._build_token_response(user)

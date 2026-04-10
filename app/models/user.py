@@ -10,6 +10,11 @@ class UserRole(str, enum.Enum):
     student = "student"
 
 
+class UserSex(str, enum.Enum):
+    masculino = "masculino"
+    femenino = "femenino"
+
+
 class User(Base, TimestampMixin):
     __tablename__ = "users"
 
@@ -25,6 +30,10 @@ class User(Base, TimestampMixin):
         SAEnum(UserRole, name="userrole", native_enum=False),
         nullable=False,
         default=UserRole.student,
+    )
+    sex = Column(
+        SAEnum(UserSex, name="usersex", native_enum=False),
+        nullable=True,
     )
     is_active = Column(Boolean, default=True, nullable=False)
 

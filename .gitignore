@@ -14,9 +14,16 @@ __pycache__/
 *.log
 coverage/
 
+# Reportes de testing
+testing/
+
 # Base de datos local
 db.sqlite3
 *.db
+db_explorer.db
+
+# Exportaciones CSV
+exports/
 
 # Migraciones de Alembic
 alembic/versions/

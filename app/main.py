@@ -12,6 +12,7 @@ from app.api.auth import router as auth_router
 from app.api.course import router as courses_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.enrollments import router as enrollments_router
+from app.api.users import router as users_router
 
 
 @asynccontextmanager
@@ -33,7 +34,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # desarrollo
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -89,3 +90,4 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(courses_router, prefix="/api/v1")
 
 app.include_router(enrollments_router, prefix="/api/v1")
+app.include_router(users_router, prefix="/api/v1")
