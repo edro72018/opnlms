@@ -17,7 +17,7 @@ from app.api.users import router as users_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: crea las tablas si no existen (compatible con SQLite y PostgreSQL)
+    # Startup: crea las tablas si no existen
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
