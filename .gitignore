@@ -18,15 +18,17 @@ coverage/
 testing/
 
 # Base de datos local
-db.sqlite3
 *.db
 db_explorer.db
+
+# Peticiones HTTP
+newrequests.http
 
 # Exportaciones CSV
 exports/
 
-# Migraciones de Alembic
-alembic/versions/
+# Migraciones de Alembic (no ignorar — se necesitan para deploy en Render)
+# alembic/versions/
 
 # Archivos estáticos y media (si los generas)
 staticfiles/
