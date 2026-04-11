@@ -1,25 +1,29 @@
+import asyncio
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import JSONResponse
-from app.core.config import settings
-from app.core.exceptions import LMSException
-from app.schemas.base import APIResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.database import get_db, engine
-from app.models import Base
+from app.core.config import settings
+from app.core.database import get_db
+from app.core.exceptions import LMSException
+from app.schemas.base import APIResponse
 from app.api.auth import router as auth_router
 from app.api.course import router as courses_router
-from fastapi.middleware.cors import CORSMiddleware
 from app.api.enrollments import router as enrollments_router
 from app.api.users import router as users_router
 
 
+def _aplicar_migraciones():
+    from alembic.config import Config
+    from alembic import command as alembic_command
+    alembic_command.upgrade(Config("alembic.ini"), "head")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: crea las tablas si no existen
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    await asyncio.get_running_loop().run_in_executor(None, _aplicar_migraciones)
     yield
 
 
@@ -30,7 +34,6 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan,
 )
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -76,8 +79,7 @@ async def health_check():
 
 @app.get("/health/db", tags=["sistema"])
 async def health_db(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(text("SELECT 1"))
-    result.scalar()
+    await db.execute(text("SELECT 1"))
     return APIResponse(
         success=True,
         message="Conexión a la base de datos OK",
@@ -86,8 +88,6 @@ async def health_db(db: AsyncSession = Depends(get_db)):
 
 
 app.include_router(auth_router, prefix="/api/v1")
-
 app.include_router(courses_router, prefix="/api/v1")
-
 app.include_router(enrollments_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
